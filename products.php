@@ -42,6 +42,21 @@ $result = $conn->query($sql);
 
 <!-- PRODUCTS LIST -->
 <div id="products">
+    <script>
+const searchInput = document.getElementById('searchInput');
+const productsDiv = document.getElementById('products');
+
+searchInput.addEventListener('input', () => {
+    const query = searchInput.value;
+
+    fetch('search_products.php?q=' + encodeURIComponent(query))
+        .then(response => response.text())
+        .then(data => {
+            productsDiv.innerHTML = data;
+        })
+        .catch(error => console.error('Error:', error));
+});
+</script>
 <?php
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
