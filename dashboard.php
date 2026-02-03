@@ -1,57 +1,35 @@
 <?php
-include "config/auth.php";
-include "config/db.php";
+session_start();
 
-$sql = "SELECT f.id, f.name, f.price, c.name AS category
-        FROM food_items f
-        JOIN categories c ON f.category_id = c.id";
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
 
-$result = $conn->query($sql);
+// Optional: Only admin can access admin pages
+if ($_SESSION['role'] != 'admin') {
+    echo "<h3>Access denied. You are not an admin.</h3>";
+    exit();
+}
+
+// Continue with dashboard content
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Food Dashboard</title>
-    <link rel="stylesheet" type="text/css" href="assets/style.css">
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 
-<h2>Food Menu</h2>
-<input type="text" id="search" placeholder="Search food...">
-<?php
-if ($result->num_rows > 0) {
-    echo "<table border='1' cellpadding='8'>
-            <tr>
-                <th>Food</th>
-                <th>Category</th>
-                <th>Price (TZS)</th>
-            </tr>";
+<h2>Welcome, <?php echo $_SESSION['username']; ?>!</h2>
 
-    while ($row = $result->fetch_assoc()) {
-        echo "<tr>
-                <td>{$row['name']}</td>
-                <td>{$row['category']}</td>
-                <td>" . number_format($row['price'], 0) . "</td>
-              </tr>";
-    }
+<p>This is the admin dashboard.</p>
 
-    echo "</table>";
-} else {
-    echo "No products found";
-}
-?>
-<script>
-document.getElementById('search').addEventListener('keyup', function() {
-    var filter = this.value.toLowerCase();
-    var rows = document.querySelectorAll('table tr');
+<!-- Add your dashboard content here -->
 
-    rows.forEach(function(row, index) {
-        if (index === 0) return; // skip header row
-        var foodName = row.cells[0].textContent.toLowerCase();
-        row.style.display = foodName.includes(filter) ? '' : 'none';
-    });
-});
-</script>
 </body>
 </html>
