@@ -1,40 +1,108 @@
 body {
+    margin: 0;
     font-family: Arial, sans-serif;
-    margin: 20px;
-    background-color: #f9f9f9;
+    background: #f5f5f5;
 }
 
-h2 {
-    color: #333;
-}
-
-table {
-    border-collapse: collapse;
-    width: 80%;
-    margin-bottom: 20px;
-}
-
-table, th, td {
-    border: 1px solid #999;
-}
-
-th, td {
-    padding: 8px;
-    text-align: left;
-}
-
-input, select, button {
-    padding: 6px 10px;
-    margin: 4px 0;
-}
-
-button {
-    cursor: pointer;
-    background-color: #28a745;
+/* NAVBAR */
+.navbar {
+    background: #ff7a00;
     color: white;
-    border: none;
+    padding: 15px 30px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
 }
 
-button:hover {
-    background-color: #218838;
+.logo {
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.nav-left a,
+.nav-right a {
+    color: white;
+    text-decoration: none;
+    margin-right: 15px;
+    font-weight: bold;
+}
+
+/* BUTTONS */
+.btn {
+    background: white;
+    color: #ff7a00;
+    padding: 8px 14px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.btn.big {
+    padding: 12px 25px;
+    font-size: 18px;
+}
+
+/* HERO */
+.hero {
+    height: 70vh;
+    background: #222;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.hero-content h2 {
+    font-size: 40px;
+}
+
+/* SECTIONS */
+.section {
+    padding: 40px;
+    text-align: center;
+    background: white;
+}
+
+.section.dark {
+    background: #eee;
+}
+
+/* FEEDBACK FORM */
+.feedback-form {
+    max-width: 500px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.feedback-form input,
+.feedback-form textarea {
+    padding: 10px;
+    font-size: 16px;
+}
+
+.feedback-form textarea {
+    height: 120px;
+    resize: none;
+}
+
+.note {
+    margin-top: 15px;
+    color: #555;
+}
+
+/* FOOTER */
+.footer {
+    background: #333;
+    color: white;
+    text-align: center;
+    padding: 15px;
+}
+
+#location p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #333;
 }

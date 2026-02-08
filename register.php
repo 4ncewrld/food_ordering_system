@@ -7,26 +7,38 @@ if (isset($_POST['register'])) {
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $role = "customer";
 
-    $check = $conn->query("SELECT id FROM users WHERE email='$email'");
-    if ($check->num_rows > 0) {
-        echo "Email already exists";
+    // Check if email already exists
+    $check = $conn->query("SELECT id FROM users WHERE email = '$email'");
+    if ($check && $check->num_rows > 0) {
+        $msg = "Email already exists";
     } else {
-        $conn->query("INSERT INTO users (username, email, password, role)
-                      VALUES ('$username', '$email', '$password', '$role')");
-        echo "Registration successful";
+        // Insert new user
+        $insert = $conn->query("INSERT INTO users (username, email, password, role) VALUES ('$username', '$email', '$password', '$role')");
+        if ($insert) {
+            $msg = "Registration successful";
+        } else {
+            $msg = "Error: " . $conn->error;
+        }
     }
 }
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Register</title>
+    <meta charset="UTF-8">
+    <title>User Registration</title>
     <link rel="stylesheet" type="text/css" href="assets/style.css">
 </head>
 <body>
 
 <h2>User Registration</h2>
+
+<?php
+if (isset($msg)) {
+    echo '<p style="color:red;">' . $msg . '</p>';
+}
+?>
 
 <form method="post">
     <input type="text" name="username" placeholder="Username" required><br><br>

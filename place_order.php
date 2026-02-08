@@ -1,69 +1,71 @@
 <?php
-include "config/auth.php";
+session_start();
 include "config/db.php";
 
-if (isset($_POST['submit'])) {
-    $food_id = $_POST['food_id'];
-    $quantity = $_POST['quantity'];
-    $user_id = 1;
-    $status = 'pending';
-
-    $food = $conn->query("SELECT price FROM food_items WHERE id = $food_id")->fetch_assoc();
-    $total_price = $food['price'] * $quantity;
-
-    $conn->query("INSERT INTO orders (user_id, total_price, status) 
-                  VALUES ($user_id, $total_price, '$status')");
-
-    $order_id = $conn->insert_id;
-
-    $conn->query("INSERT INTO order_items (order_id, food_id, quantity, price)
-                  VALUES ($order_id, $food_id, $quantity, {$food['price']})");
-
-    echo "Order placed successfully!";
+/* Check if customer is logged in */
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'customer') {
+    header("Location: login.php");
+    exit;
 }
 
-$foods = $conn->query("SELECT * FROM food_items");
+if (isset($_POST['place_order'])) {
+
+    $user_id = $_SESSION['user_id'];
+    $food_id = $_POST['product_id']; // form still sends product_id
+    $quantity = $_POST['quantity'];
+
+    // Get product price
+    $sql_product = "SELECT price FROM food_items WHERE id = $food_id";
+    $res = $conn->query($sql_product);
+    if ($res && $res->num_rows > 0) {
+        $product = $res->fetch_assoc();
+        $price = $product['price'];
+    } else {
+        die("Product not found");
+    }
+
+    // Total price calculation
+    $total = $price * $quantity;
+
+    // Insert into orders table (total_price)
+    $sql_order = "INSERT INTO orders (user_id, total_price, status) VALUES ($user_id, $total, 'pending')";
+    if ($conn->query($sql_order)) {
+        $order_id = $conn->insert_id;
+
+        // Insert into order_items table (food_id)
+        $sql_item = "INSERT INTO order_items (order_id, food_id, quantity, price) 
+                     VALUES ($order_id, $food_id, $quantity, $price)";
+        if ($conn->query($sql_item)) {
+            $msg = "Order placed successfully!";
+        } else {
+            $msg = "Error inserting order item: " . $conn->error;
+        }
+    } else {
+        $msg = "Error placing order: " . $conn->error;
+    }
+
+} else {
+    $msg = "Invalid request";
+}
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Place Order</title>
-    <link rel="stylesheet" type="text/css" href="assets/style.css">
+    <style>
+        body { font-family: Arial; padding:20px; }
+        .msg { background:#d4edda; padding:10px; border-radius:5px; color:#155724; }
+        a { display:inline-block; margin-top:10px; text-decoration:none; color:#007bff; }
+    </style>
 </head>
 <body>
 
 <h2>Place Order</h2>
 
-<form method="post">
-    <select name="food_id" required>
-        <?php while ($f = $foods->fetch_assoc()) { ?>
-            <option value="<?= $f['id'] ?>">
-                <?= $f['name'] ?> - Tsh <?= number_format($f['price'], 0) ?>
-            </option>
-        <?php } ?>
-    </select>
-    <br><br>
+<p class="msg"><?php echo $msg; ?></p>
+<a href="customer_products.php">Back to Products</a>
 
-    <input type="number" name="quantity" min="1" required>
-    <br><br>
-
-    <button type="submit" name="submit">Order</button>
-</form>
-<script>
-document.querySelector('form').addEventListener('submit', function(e) {
-    var qty = document.querySelector('input[name="quantity"]').value;
-    if (qty <= 0) {
-        alert('Quantity must be at least 1');
-        e.preventDefault(); 
-    }
-
-    var food = document.querySelector('select[name="food_id"]').value;
-    if (food == "") {
-        alert('Please select a food item');
-        e.preventDefault();
-    }
-});
-</script>
 </body>
 </html>
