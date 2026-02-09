@@ -1,139 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>4nce Food Ordering System</title>
-    <link rel="stylesheet" href="assets/style.css">
+<meta charset="UTF-8">
+<title>4nce Food Ordering System</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, sans-serif;
+}
+
+body{
+    background:#f4f4f4;
+}
+
+/* ===== HEADER ===== */
+header{
+    background: linear-gradient(to right,#ff7a18,#ffb347);
+    padding:20px 40px;
+}
+
+.header-container{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+}
+
+.logo{
+    grid-column:2;
+    text-align:center;
+    font-size:32px;
+    font-weight:bold;
+}
+
+.logo span:nth-child(1){color:#00ffd5;}
+.logo span:nth-child(2){color:#ffff00;}
+.logo span:nth-child(3){color:#ffffff;}
+
+.nav{
+    grid-column:3;
+    text-align:right;
+}
+
+.nav a{
+    color:white;
+    text-decoration:none;
+    margin-left:20px;
+    font-weight:bold;
+}
+
+.nav a:hover{
+    text-decoration:underline;
+}
+
+/* ===== HERO ===== */
+.hero{
+    background:linear-gradient(to right,#ff7a18,#ff5722);
+    color:white;
+    text-align:center;
+    padding:60px 20px;
+}
+
+.hero h1{
+    font-size:36px;
+    margin-bottom:10px;
+}
+
+.hero p{
+    font-size:18px;
+    max-width:700px;
+    margin:auto;
+}
+
+.hero button{
+    margin-top:20px;
+    padding:12px 25px;
+    border:none;
+    background:#222;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+.hero button:hover{
+    background:#000;
+}
+
+/* ===== SECTIONS ===== */
+.section-container{
+    display:flex;
+    justify-content:space-around;
+    padding:40px 20px;
+    background:white;
+    flex-wrap:wrap;
+}
+
+.section{
+    width:45%;
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.section h2{
+    color:#ff5722;
+    margin-bottom:15px;
+}
+
+.section p{
+    color:#333;
+    line-height:1.6;
+}
+
+/* ===== FOOTER ===== */
+footer{
+    background:#222;
+    color:white;
+    text-align:center;
+    padding:15px;
+    font-size:14px;
+}
+</style>
 </head>
+
 <body>
 
-<!-- NAVBAR -->
-<header class="navbar">
-    <nav class="nav-left">
-        <a href="#home">Home</a>
-        <a href="#contact">Contact</a>
-        <a href="#location">Location</a>
-        <a href="#feedback">Feedback</a>
-    </nav>
+<header>
+    <div class="header-container">
 
-    <h1 class="logo">4nce Food Ordering System</h1>
+        <div></div>
 
-    <nav class="nav-right">
-        <a href="customer_products.php" class="btn">View Foods</a>
-    </nav>
+        <div class="logo">
+            <span>4nce</span>
+            <span> Food Ordering </span>
+            <span>System</span>
+        </div>
+
+        <div class="nav">
+            <a href="index.php">Home</a>
+            <a href="about.php">About Us</a>
+            <a href="privacy.php">Privacy Policy</a>
+            <a href="terms.php">Terms</a>
+        </div>
+
+    </div>
 </header>
 
-<!-- HERO / HOME -->
-<section class="hero" id="home">
-    <div class="hero-content">
-        <h2>Delicious Foods, Delivered Fast</h2>
-        <p>Order your favorite meals easily and quickly.</p>
-        <a href="customer_products.php" class="btn big">Order Now</a>
-    </div>
-</section>
-
-<!-- CONTACT -->
-<section id="contact" class="section">
-    <h2>Contact Us</h2>
-    <p><strong>Phone:</strong> 0776837790</p>
-    <p><strong>Email:</strong> alphonce1104mtenga@gmail.com</p>
-</section>
-
-<!-- LOCATION -->
-<section id="location" class="section dark">
-    <h2>Our Location</h2>
-    <p>Boma, Kilimanjaro</p>
-</section>
-
-<!-- CUSTOMER FEEDBACK -->
-<section id="feedback" class="section">
-    <h2>Customer Feedback</h2>
-
-    <form class="feedback-form">
-        <input type="text" placeholder="Your Name" required>
-        <textarea placeholder="Write your feedback here..." required></textarea>
-        <button type="submit" class="btn big">Send Feedback</button>
-    </form>
-
-    <p class="note">
-        Your feedback will be sent to the admin.
+<section class="hero">
+    <h1>Fast & Reliable Food Ordering Platform</h1>
+    <p>
+        A modern food ordering system that allows customers to explore food items,
+        place orders easily, and enjoy fast and reliable delivery services.
     </p>
+
+    <!-- UPDATED BUTTON LINK -->
+    <button onclick="location.href='customer_products.php'">
+        View Our Foods
+    </button>
 </section>
 
-<!-- FOOTER -->
-<footer class="footer">
-    <p>&copy; 2026 4nce Food Ordering System. All rights reserved.</p>
-</footer>
+<section class="section-container">
 
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>4nce Food Ordering System</title>
-    <link rel="stylesheet" href="assets/style.css">
-</head>
-<body>
-
-<!-- NAVBAR -->
-<header class="navbar">
-    <nav class="nav-left">
-        <a href="#home">Home</a>
-        <a href="#contact">Contact</a>
-        <a href="#location">Location</a>
-        <a href="#feedback">Feedback</a>
-    </nav>
-
-    <h1 class="logo">4nce Food Ordering System</h1>
-
-    <nav class="nav-right">
-        <a href="customer_products.php" class="btn">View Foods</a>
-    </nav>
-</header>
-
-<!-- HERO / HOME -->
-<section class="hero" id="home">
-    <div class="hero-content">
-        <h2>Delicious Foods, Delivered Fast</h2>
-        <p>Order your favorite meals easily and quickly.</p>
-        <a href="customer_products.php" class="btn big">Order Now</a>
+    <div class="section">
+        <h2>Why Choose 4nce</h2>
+        <p>
+            We provide a simple, fast, and secure food ordering experience.
+            Customers can browse menus, place orders easily, and receive
+            timely deliveries with guaranteed satisfaction.
+        </p>
     </div>
+
+    <div class="section">
+        <h2>Our Services</h2>
+        <p>
+            Online food ordering, real-time order processing,
+            reliable delivery services, and customer support
+            designed to meet modern food business needs.
+        </p>
+    </div>
+
 </section>
 
-<!-- CONTACT -->
-<section id="contact" class="section">
-    <h2>Contact Us</h2>
-    <p><strong>Phone:</strong> 0776837790</p>
-    <p><strong>Email:</strong> alphonce1104mtenga@gmail.com</p>
-</section>
-
-<!-- LOCATION -->
-<section id="location" class="section dark">
-    <h2>Our Location</h2>
-    <p>Boma, Kilimanjaro</p>
-    <p>Country: Tanzania</p>
-    <p>P.O. Box 57</p>
-    <p>Opposite Panone</p>
-</section>
-
-<!-- CUSTOMER FEEDBACK -->
-<section id="feedback" class="section">
-    <h2>Customer Feedback</h2>
-
-    <form class="feedback-form" method="POST" action="submit_feedback.php">
-    <input type="text" name="name" placeholder="Your Name" required>
-    <textarea name="message" placeholder="Write your feedback here..." required></textarea>
-    <button type="submit" class="btn big">Send Feedback</button>
-</form>
-
-    <p class="note">
-        Your feedback will be sent to the admin.
-    </p>
-</section>
-
-<!-- FOOTER -->
-<footer class="footer">
-    <p>&copy; 2026 4nce Food Ordering System. All rights reserved.</p>
+<footer>
+    &copy; 2026 4nce Food Ordering System. All Rights Reserved.
 </footer>
 
 </body>

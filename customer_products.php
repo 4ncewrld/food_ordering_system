@@ -1,67 +1,124 @@
 <?php
-session_start();
 include "config/db.php";
+session_start();
 
-/* Only logged-in customers */
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'customer') {
+// Ensure user is logged in as customer
+if(!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'customer'){
     header("Location: login.php");
     exit;
 }
-
-// Handle search/filter
-$search = isset($_GET['search']) ? trim($_GET['search']) : '';
-$min_price = isset($_GET['min_price']) ? (float)$_GET['min_price'] : 0;
-$max_price = isset($_GET['max_price']) ? (float)$_GET['max_price'] : 100000000; // big number
-
-$sql = "SELECT id, name, price FROM food_items 
-        WHERE name LIKE '%$search%' 
-        AND price BETWEEN $min_price AND $max_price";
-$result = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Food Menu</title>
+    <title>4nce Food Ordering System - Products</title>
+    <link rel="stylesheet" href="assets/style.css">
     <style>
-        body { font-family: Arial; background:#f7f7f7; padding:20px; }
-        .card { background:#fff; padding:15px; margin-bottom:10px; border-radius:5px; box-shadow:0 2px 5px rgba(0,0,0,.1); }
-        .price { color:green; font-weight:bold; }
-        input[type=number], input[type=text] { padding:3px; margin-right:5px; }
-        button { padding:6px 12px; background:#ff9800; border:none; color:#fff; cursor:pointer; border-radius:3px; }
-        form.search-form { margin-bottom:20px; }
+        body {
+            font-family: Arial, sans-serif;
+            background:#f4f4f4;
+            margin:0;
+            padding:0;
+        }
+        h1, h2 {
+            text-align:center;
+            margin:20px 0;
+            color:#ff5722;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1100px;
+            margin:auto;
+        }
+
+        .product-card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            transition: transform 0.2s;
+        }
+        .product-card:hover {
+            transform: scale(1.03);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .product-card h3 {
+            font-size: 18px;
+            margin: 5px 0;
+            color:#333;
+        }
+
+        .product-card p {
+            margin: 5px 0;
+            font-weight: bold;
+            color:#007bff;
+        }
+
+        .product-card .btn {
+            margin-top: 10px;
+            display:inline-block;
+            padding:10px 18px;
+            background:#007bff;
+            color:#fff;
+            text-decoration:none;
+            border-radius:5px;
+            transition: background 0.2s;
+        }
+
+        .product-card .btn:hover {
+            background:#0056b3;
+        }
     </style>
 </head>
 <body>
 
-<h2>Available Food Products</h2>
+<h1>4nce Food Ordering System</h1>
+<h2>Our Foods</h2>
 
-<!-- Search & Filter Form -->
-<form method="get" class="search-form">
-    <input type="text" name="search" placeholder="Search product" value="<?php echo htmlspecialchars($search); ?>">
-    Min Price: <input type="number" name="min_price" value="<?php echo $min_price; ?>" min="0">
-    Max Price: <input type="number" name="max_price" value="<?php echo $max_price; ?>" min="0">
-    <button type="submit">Filter</button>
-</form>
+<div class="products-grid">
+    <?php
+    // Fetch all products from DB
+    $sql = "SELECT * FROM products";
+    $result = $conn->query($sql);
 
-<?php
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        echo "<div class='card'>";
-        echo "<h3>{$row['name']}</h3>";
-        echo "<p class='price'>Tsh {$row['price']}</p>";
-        echo "<form method='post' action='place_order.php'>";
-        echo "<input type='hidden' name='product_id' value='{$row['id']}'>";
-        echo "Quantity: <input type='number' name='quantity' value='1' min='1' required>";
-        echo "<button type='submit' name='place_order'>Order</button>";
-        echo "</form>";
-        echo "</div>";
+    if ($result && $result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            // Use offline image path
+            $image_path = "assets/images/" . $row['image'];
+
+            // Check if image exists
+            if(!file_exists($image_path)){
+                $image_path = "assets/images/default.png"; // optional fallback
+            }
+    ?>
+        <div class="product-card">
+            <img src="<?php echo $image_path; ?>" alt="<?php echo $row['name']; ?>">
+            <h3><?php echo $row['name']; ?></h3>
+            <p>Price: TZS <?php echo number_format($row['price'], 2); ?></p>
+            <a href="place_order.php?product_id=<?php echo $row['id']; ?>" class="btn">Order Now</a>
+        </div>
+    <?php
+        }
+    } else {
+        echo "<p style='text-align:center;'>No products found.</p>";
     }
-} else {
-    echo "<p>No products found.</p>";
-}
-?>
+    ?>
+</div>
 
 </body>
 </html>
