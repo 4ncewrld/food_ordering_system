@@ -2,19 +2,31 @@
 include "config/db.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = trim($_POST['name']);
-    $message = trim($_POST['message']);
+    // Collect and sanitize input
+    $customer = trim($_POST['customer']);
+    $email    = trim($_POST['email']);
+    $contact  = trim($_POST['contact']);
+    $review   = trim($_POST['review']);
 
-    if ($name != "" && $message != "") {
-        $stmt = $conn->prepare("INSERT INTO feedback (customer_name, message) VALUES (?, ?)");
-        $stmt->bind_param("ss", $name, $message);
-        $stmt->execute();
-        $stmt->close();
-
-        header("Location: index.php?feedback=success");
+    // Check if any field is empty
+    if (empty($customer) || empty($email) || empty($contact) || empty($review)) {
+        header("Location: feedback.php?status=empty");
         exit;
     }
-}
 
-header("Location: index.php?feedback=error");
-exit;
+    // Insert into database using Prepared Statements
+    $stmt = $conn->prepare("INSERT INTO feedback (customer, email, contact, review) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $customer, $email, $contact, $review);
+
+    if ($stmt->execute()) {
+        $stmt->close();
+        header("Location: feedback.php?status=success");
+        exit;
+    } else {
+        die("Error: " . $conn->error);
+    }
+} else {
+    header("Location: feedback.php");
+    exit;
+}
+?>

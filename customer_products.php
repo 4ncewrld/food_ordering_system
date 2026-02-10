@@ -1,7 +1,9 @@
 <?php
 include "config/db.php";
 session_start();
-
+include "navbar.php"; 
+?>
+<?php
 // Ensure user is logged in as customer
 if(!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'customer'){
     header("Location: login.php");
@@ -26,6 +28,20 @@ if(!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'customer'){
             text-align:center;
             margin:20px 0;
             color:#ff5722;
+        }
+
+        .top-bar{
+            text-align:center;
+            margin-bottom:10px;
+        }
+        .top-bar a{
+            display:inline-block;
+            margin:0 10px;
+            padding:8px 16px;
+            background:#222;
+            color:white;
+            text-decoration:none;
+            border-radius:5px;
         }
 
         .products-grid {
@@ -90,34 +106,40 @@ if(!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'customer'){
 <h1>4nce Food Ordering System</h1>
 <h2>Our Foods</h2>
 
+<div class="top-bar">
+    <a href="cart.php">🛒 View Cart</a>
+    <a href="index.php">🏠 Home</a>
+</div>
+
 <div class="products-grid">
-    <?php
-    // Fetch all products from DB
-    $sql = "SELECT * FROM products";
-    $result = $conn->query($sql);
+<?php
+$sql = "SELECT * FROM products";
+$result = $conn->query($sql);
 
-    if ($result && $result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-            // Use offline image path
-            $image_path = "assets/images/" . $row['image'];
+if ($result && $result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
 
-            // Check if image exists
-            if(!file_exists($image_path)){
-                $image_path = "assets/images/default.png"; // optional fallback
-            }
-    ?>
-        <div class="product-card">
-            <img src="<?php echo $image_path; ?>" alt="<?php echo $row['name']; ?>">
-            <h3><?php echo $row['name']; ?></h3>
-            <p>Price: TZS <?php echo number_format($row['price'], 2); ?></p>
-            <a href="place_order.php?product_id=<?php echo $row['id']; ?>" class="btn">Order Now</a>
-        </div>
-    <?php
+        $image_path = "assets/images/" . $row['image'];
+        if(empty($row['image']) || !file_exists($image_path)){
+            $image_path = "assets/images/default.png";
         }
-    } else {
-        echo "<p style='text-align:center;'>No products found.</p>";
+?>
+    <div class="product-card">
+        <img src="<?php echo $image_path; ?>" alt="<?php echo htmlspecialchars($row['name']); ?>">
+        <h3><?php echo htmlspecialchars($row['name']); ?></h3>
+        <p>Price: TZS <?php echo number_format($row['price'],2); ?></p>
+
+        <!-- CART LINK -->
+        <a href="add_to_cart.php?id=<?php echo $row['id']; ?>" class="btn">
+            Add to Cart
+        </a>
+    </div>
+<?php
     }
-    ?>
+} else {
+    echo "<p style='text-align:center;'>No products found.</p>";
+}
+?>
 </div>
 
 </body>

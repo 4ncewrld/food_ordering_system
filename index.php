@@ -142,6 +142,7 @@ footer{
             <a href="index.php">Home</a>
             <a href="about.php">About Us</a>
             <a href="privacy.php">Privacy Policy</a>
+            <a href="submit_feedback.php">Feedback</a>
             <a href="terms.php">Terms</a>
         </div>
 
