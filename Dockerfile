@@ -1,14 +1,17 @@
-# Base image
-FROM php:8.2-cli
+# ===== PHP with Apache base image =====
+FROM php:8.2-apache
 
-# Set working directory
-WORKDIR /app
+# ===== Enable mysqli and pdo_mysql extensions =====
+RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Copy project files
-COPY . /app
+# ===== Set working directory =====
+WORKDIR /var/www/html
 
-# Expose port 8080 (Railway default for HTTP)
+# ===== Copy project files into container =====
+COPY . /var/www/html/
+
+# ===== Expose port 8080 (Railway default) =====
 EXPOSE 8080
 
-# Start PHP built-in server
-CMD ["php", "-S", "0.0.0.0:8080", "-t", "."]
+# ===== Start Apache in foreground =====
+CMD ["apache2-foreground"]
