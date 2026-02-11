@@ -1,13 +1,20 @@
+# Step 1: Base image PHP + Apache
 FROM php:8.2-apache
 
-# Enable Apache mod_rewrite
+# Step 2: Set working directory inside container
+WORKDIR /var/www/html/food
+
+# Step 3: Copy all project files into container
+COPY . .
+
+# Step 4: Enable Apache mod_rewrite (optional, useful for clean URLs)
 RUN a2enmod rewrite
 
-# Install mysqli
+# Step 5: Install mysqli extension for PHP (required for MySQL)
 RUN docker-php-ext-install mysqli
 
-# Copy project files to Apache root
-COPY . /var/www/html/
+# Step 6: Expose default Apache port
+EXPOSE 80
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html
+# Step 7: Start Apache in foreground
+CMD ["apache2-foreground"]
