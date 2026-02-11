@@ -114,6 +114,52 @@ header{
     line-height:1.6;
 }
 
+/* ===== FEEDBACK ===== */
+.feedback-section{
+    background:#fff;
+    padding:40px 20px;
+    margin:30px auto;
+    max-width:600px;
+    border-radius:8px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+.feedback-section h2{
+    text-align:center;
+    color:#ff5722;
+    margin-bottom:20px;
+}
+
+.feedback-section input,
+.feedback-section textarea{
+    width:100%;
+    padding:10px;
+    margin-bottom:10px;
+    border:1px solid #ccc;
+    border-radius:4px;
+}
+
+.feedback-section button{
+    width:100%;
+    padding:12px;
+    background:#ff5722;
+    color:white;
+    border:none;
+    cursor:pointer;
+    font-size:16px;
+    border-radius:5px;
+}
+
+.feedback-section button:hover{
+    background:#e64a19;
+}
+
+#feedback-message{
+    text-align:center;
+    margin-bottom:10px;
+    font-weight:bold;
+}
+
 /* ===== FOOTER ===== */
 footer{
     background:#222;
@@ -129,23 +175,19 @@ footer{
 
 <header>
     <div class="header-container">
-
         <div></div>
-
         <div class="logo">
             <span>4nce</span>
             <span> Food Ordering </span>
             <span>System</span>
         </div>
-
         <div class="nav">
             <a href="index.php">Home</a>
             <a href="about.php">About Us</a>
             <a href="privacy.php">Privacy Policy</a>
-            <a href="submit_feedback.php">Feedback</a>
+            <a href="#feedback">Feedback</a>
             <a href="terms.php">Terms</a>
         </div>
-
     </div>
 </header>
 
@@ -156,7 +198,6 @@ footer{
         place orders easily, and enjoy fast and reliable delivery services.
     </p>
 
-    <!-- UPDATED BUTTON LINK -->
     <button onclick="location.href='customer_products.php'">
         View Our Foods
     </button>
@@ -184,9 +225,77 @@ footer{
 
 </section>
 
+<!-- ===== FEEDBACK SECTION (AJAX) ===== -->
+<section class="feedback-section" id="feedback">
+    <h2>Customer Feedback</h2>
+
+    <div id="feedback-message"></div>
+
+    <form id="feedbackForm">
+        <input type="text" name="customer" placeholder="Your Name" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="text" name="contact" placeholder="Phone Number" required>
+        <textarea name="review" placeholder="Write your feedback..." required></textarea>
+        <button type="submit">Send Feedback</button>
+    </form>
+
+    <div id="feedbackList" style="margin-top:30px;"></div>
+</section>
+
 <footer>
     &copy; 2026 4nce Food Ordering System. All Rights Reserved.
 </footer>
+
+<!-- ===== AJAX SCRIPT ===== -->
+<script>
+// Fetch and display feedbacks
+function loadFeedback() {
+    fetch('fetch_feedback.php')
+    .then(res => res.json())
+    .then(data => {
+        let html = '';
+        data.forEach(fb => {
+            html += `<div style="background:#f9f9f9; padding:15px; margin-bottom:10px; border-radius:5px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+                        <strong>${fb.customer}</strong> (${fb.contact})<br>
+                        <em>${fb.email}</em>
+                        <p>${fb.review}</p>
+                        <small style="color:gray;">${fb.created_at}</small>
+                     </div>`;
+        });
+        document.getElementById('feedbackList').innerHTML = html;
+    });
+}
+
+// Initial load
+loadFeedback();
+
+// Submit feedback via AJAX
+document.getElementById("feedbackForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    const formData = new FormData(this);
+    document.getElementById("feedback-message").innerText = "Submitting...";
+
+    fetch("submit_feedback.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.text())
+    .then(data => {
+        if(data === "success"){
+            document.getElementById("feedback-message").innerHTML = "<span style='color:green;'>Thank you! Feedback sent successfully.</span>";
+            this.reset();
+            loadFeedback();
+        } else if(data === "empty") {
+            document.getElementById("feedback-message").innerHTML = "<span style='color:red;'>Please fill all fields!</span>";
+        } else {
+            document.getElementById("feedback-message").innerHTML = "<span style='color:red;'>Error submitting feedback. Try again.</span>";
+        }
+    })
+    .catch(()=> {
+        document.getElementById("feedback-message").innerHTML = "<span style='color:red;'>Error submitting feedback. Try again.</span>";
+    });
+});
+</script>
 
 </body>
 </html>

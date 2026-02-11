@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Check if any field is empty
     if (empty($customer) || empty($email) || empty($contact) || empty($review)) {
-        header("Location: feedback.php?status=empty");
+        echo "empty";
         exit;
     }
 
@@ -20,13 +20,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt->execute()) {
         $stmt->close();
-        header("Location: feedback.php?status=success");
+        echo "success"; // AJAX response
         exit;
     } else {
-        die("Error: " . $conn->error);
+        echo "error"; // AJAX response
+        exit;
     }
 } else {
-    header("Location: feedback.php");
+    echo "invalid"; // Accessed without POST
     exit;
 }
 ?>
